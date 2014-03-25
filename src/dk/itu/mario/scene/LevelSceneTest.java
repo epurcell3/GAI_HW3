@@ -120,7 +120,8 @@ import dk.itu.mario.res.ResourcesManager;
 		    	double endX = level.getxExit()*squareSize; //position of the end on the level
 		    	if(!isCustom && recorder==null)
 		    		recorder = new DataRecorder(this,(RandomLevel)level,keys);
-
+                else if(recorder == null)
+                    recorder = new DataRecorder(this, (RandomLevel)level, keys);
 		        gameStarted = false;
 			}
 
