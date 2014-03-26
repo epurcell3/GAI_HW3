@@ -32,11 +32,11 @@ public class GenerationValues {
         hillCoeff = playerMetrics.jumpsNumber;
         holeCoeff = playerMetrics.jumpsNumber / (playerMetrics.timesOfDeathByFallingIntoGap + 1);
         totalSaturation = 1.05;
-        enemyClusterSize = 10;
+        enemyClusterSize = 3;
         avgEnemiesInCuster = 3;
         coinClusterSize = 8;
         avgCoinsInCluster = 5;
-        hillClusterSize = 16;
+        hillClusterSize = 7;
         avgHillsInCluster = 2;
         avgeBlocksToRow = 4;
         fixCoeffs(playerMetrics);

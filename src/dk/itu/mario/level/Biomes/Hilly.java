@@ -13,7 +13,7 @@ public class Hilly implements Biome {
     public Hilly(){
 
     }
-    @Override
+
     public void changeToBiome(GenerationValues generationValues) {
         generationValues.setHillCoeff(generationValues.getHillCoeff() * 3);
         generationValues.setHoleCoeff(generationValues.getHoleCoeff() * 3 / 2);
@@ -23,12 +23,12 @@ public class Hilly implements Biome {
         generationValues.setAvgEnemiesInCuster(1);
         generationValues.setCoinClusterSize(6);
         generationValues.setAvgCoinsInCluster(3);
-        generationValues.setHillClusterSize(12);
-        generationValues.setAvgHillsInCluster(5);
+        generationValues.setHillClusterSize(8);
+        generationValues.setAvgHillsInCluster(6);
         generationValues.setAvgeBlocksToRow(5);
         generationValues.setTotalSaturation(1.4);
     }
-    @Override
+
     public String biomeName(){
         return "Hilly";
     }
