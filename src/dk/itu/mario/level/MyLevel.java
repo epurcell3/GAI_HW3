@@ -23,7 +23,7 @@ public class MyLevel extends Level{
 
 	    Random random;
 
-  
+        private GenerationValues values;
 	    private int difficulty;
 	    private int type;
 		private int gaps;
@@ -34,9 +34,10 @@ public class MyLevel extends Level{
 	    }
 
 
-		public MyLevel(int width, int height, long seed, int difficulty, int type, GamePlay playerMetrics)
+		public MyLevel(int width, int height, long seed, int difficulty, int type, GamePlay playerMetrics, GenerationValues values)
 	    {
 	        this(width, height);
+            this.values = values;
 	        creat(seed, difficulty, type);
 	    }
 
