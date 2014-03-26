@@ -57,12 +57,29 @@ public class MyLevel extends Level{
 	        while (length < width - 64)
 	        {
 	            //length += buildZone(length, width - length);
-				length += buildStraight(length, width-length, false);
-				length += buildStraight(length, width-length, false);
-				length += buildHillStraight(length, width-length);
-				length += buildJump(length, width-length);
-				length += buildTubes(length, width-length);
-				length += buildCannons(length, width-length);
+//				length += buildStraight(length, width-length, false);
+//				length += buildStraight(length, width-length, false);
+//				length += buildHillStraight(length, width-length);
+//				length += buildJump(length, width-length);
+//				length += buildTubes(length, width-length);
+//				length += buildCannons(length, width-length);
+	        	
+	        	double hill = random.nextDouble() * values.getHillCoeff();
+	        	double straight = random.nextDouble() * (1 - values.getHillCoeff());
+	        	double hole = random.nextDouble() * values.getHoleCoeff();
+	        	
+	        	if (hill > straight && hill > hole)
+	        	{
+	        		length += buildHillStraight(length, width-length);
+	        	}
+	        	else if (straight > hill && straight > hole)
+	        	{
+	        		length += buildStraight(length, width - length, false);
+	        	}
+	        	else //if (hole > hill && hole > straight)
+	        	{
+	        		length += buildJump(length, width-length);
+	        	}
 	        }
 
 	        //set the end piece
