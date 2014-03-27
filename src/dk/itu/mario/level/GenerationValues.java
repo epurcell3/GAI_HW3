@@ -32,7 +32,7 @@ public class GenerationValues {
     public GenerationValues(GamePlay playerMetrics){
         enemyClusterTypes = new ArrayList<ArrayList<Integer>>();
 
-        if(playerMetrics.totalTime == 0 ||  playerMetrics.totalEmptyBlocks == 0 || playerMetrics.totalEnemies == 0 || playerMetrics.totalCoins == 0){
+        if(playerMetrics == null ||playerMetrics.totalTime == 0 ||  playerMetrics.totalEmptyBlocks == 0 || playerMetrics.totalEnemies == 0 || playerMetrics.totalCoins == 0){
             enemyCoeff = 0.25;
             coinCoeff = 0.2;
             hillCoeff = 0.2;
