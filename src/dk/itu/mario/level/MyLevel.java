@@ -1,12 +1,12 @@
 package dk.itu.mario.level;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-import dk.itu.mario.MarioInterface.Constraints;
 import dk.itu.mario.MarioInterface.GamePlay;
 import dk.itu.mario.MarioInterface.LevelInterface;
-import dk.itu.mario.engine.sprites.SpriteTemplate;
 import dk.itu.mario.engine.sprites.Enemy;
+import dk.itu.mario.engine.sprites.SpriteTemplate;
 
 
 public class MyLevel extends Level{
@@ -346,6 +346,57 @@ public class MyLevel extends Level{
 	    				x++;
 	    			} while (heightmap[x][1] != heightmap[xo][1]);
 	    			used[x] = true;
+	    		}
+	    	}
+	    	
+	    	int nEnemyGroups = (int)(width / values.getEnemyClusterSize() * values.getEnemyCoeff());
+	    	for (int i = 0; i < nEnemyGroups; i++) {
+	    		int x0 = random.nextInt(xExit - 64) + 15;
+	    		int n = values.getEnemyClusterTypes().size();
+	    		if (n > 0)
+	    		{
+		    		ArrayList<Integer> enemies = values.getEnemyClusterTypes().get(random.nextInt(n));
+		    		for (int j = 0; j < enemies.size(); j++) {
+		    			int x = (int)(random.nextGaussian() * values.getEnemyClusterSize()) + x0;
+		    			if (x < 15) x = 15;
+		    			if (x > xExit - 32) x = xExit - 32;
+		    			for (int y = 0; y < heightmap[x][0]; y++) {
+		    				if (getBlock(x,y) != 0) {
+		    					if (random.nextInt(3) == 0)
+		    		    			setSpriteTemplate(x, y - 1, new SpriteTemplate(enemies.get(j), random.nextInt(35) < difficulty));
+		    	                	ENEMIES++;
+		    						break;
+		    				}
+		    			}
+		    		}
+	    		}
+	    		else {
+	    			int nEnemies = (int)(random.nextGaussian() * values.getAvgEnemiesInCuster()/2) + values.getAvgEnemiesInCuster();
+	    			for (int j = 0; j < nEnemies; j++) {
+	    				int x = (int)(random.nextGaussian() * values.getEnemyClusterSize()) + x0;
+		    			if (x < 15) x = 15;
+		    			if (x > xExit - 32) x = xExit - 32;
+		    			for (int y = 0; y < heightmap[x][0]; y++) {
+		    				if (getBlock(x,y) != 0) {
+		    					if (random.nextInt(3) == 0)
+		    					{
+		    						int etype = random.nextInt(4);
+
+			    	                if (difficulty < 1)
+			    	                {
+			    	                    etype = Enemy.ENEMY_GOOMBA;
+			    	                }
+			    	                else if (difficulty < 3)
+			    	                {
+			    	                    etype = random.nextInt(3);
+			    	                }
+		    		    			setSpriteTemplate(x, y - 1, new SpriteTemplate(etype, random.nextInt(35) < difficulty));
+		    	                	ENEMIES++;
+		    						break;
+		    					}
+		    				}
+		    			}
+	    			}
 	    		}
 	    	}
 	    }
