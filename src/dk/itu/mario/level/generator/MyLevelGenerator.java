@@ -11,11 +11,7 @@ import dk.itu.mario.level.MyLevel;
 
 public class MyLevelGenerator extends CustomizedLevelGenerator implements LevelGenerator{
 
-    private double enemyCoeff;
-    private double coinCoeff;
-    private double hillCoeff;
-    private double holeCoeff;
-    private double bricksCoeff;
+
     private GenerationValues values;
 
 	public LevelInterface generateLevel(GamePlay playerMetrics) {

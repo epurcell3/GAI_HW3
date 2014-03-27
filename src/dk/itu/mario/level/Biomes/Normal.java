@@ -8,28 +8,20 @@ import java.util.ArrayList;
  * Created with IntelliJ IDEA.
  * User: Ryan
  * Date: 3/26/14
- * Time: 2:52 PM
+ * Time: 10:47 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Hilly implements Biome {
-    public Hilly(){
-
+public class Normal implements Biome {
+    @Override
+    public void changeToBiome(GenerationValues generationValues) {
+        generationValues.setTotalSaturation(1.1);
+        setEnemyClusters(generationValues);
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void changeToBiome(GenerationValues generationValues) {
-        generationValues.setHillCoeff(generationValues.getHillCoeff() * 3);
-        generationValues.setHoleCoeff(generationValues.getHoleCoeff() * 3 / 2);
-        generationValues.setCoinCoeff(generationValues.getCoinCoeff()  / 2);
-        generationValues.setEnemyCoeff(generationValues.getEnemyCoeff() / 2);
-        generationValues.setBricksCoeff(generationValues.getBricksCoeff() / 2);
-        generationValues.setAvgEnemiesInCuster(1);
-        generationValues.setCoinClusterSize(6);
-        generationValues.setAvgCoinsInCluster(3);
-        generationValues.setHillClusterSize(8);
-        generationValues.setAvgHillsInCluster(6);
-        generationValues.setAvgeBlocksToRow(5);
-        generationValues.setTotalSaturation(1.4);
-        setEnemyClusters(generationValues);
+    @Override
+    public String biomeName() {
+        return "Normal";  //To change body of implemented methods use File | Settings | File Templates.
     }
     private void setEnemyClusters(GenerationValues generationValues){
         ArrayList<ArrayList<Integer>>  clusters = new ArrayList<ArrayList<Integer>>();
@@ -56,9 +48,16 @@ public class Hilly implements Biome {
         cluster5.add(0);
         cluster5.add(0);
         clusters.add(cluster5);
+        ArrayList<Integer> cluster6 = new ArrayList<Integer>();
+        cluster6.add(9);
+        clusters.add(cluster6);
+        ArrayList<Integer> cluster7 = new ArrayList<Integer>();
+        cluster7.add(5);
+        cluster7.add(6);
+        clusters.add(cluster7);
         generationValues.setEnemyClusterTypes(clusters);
-    }
-    public String biomeName(){
-        return "Hilly";
+
+
+
     }
 }

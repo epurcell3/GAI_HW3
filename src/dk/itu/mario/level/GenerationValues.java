@@ -3,6 +3,9 @@ package dk.itu.mario.level;
 import dk.itu.mario.MarioInterface.GamePlay;
 import dk.itu.mario.level.Biomes.Biome;
 import dk.itu.mario.level.Biomes.Hilly;
+import dk.itu.mario.level.Biomes.Normal;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,8 +28,12 @@ public class GenerationValues {
     private int avgHillsInCluster;
     private double avgeBlocksToRow;
     private double totalSaturation;
+    ArrayList<ArrayList<Integer>> enemyClusterTypes;
+
     public Biome biome;
     public GenerationValues(GamePlay playerMetrics){
+        enemyClusterTypes = new ArrayList<ArrayList<Integer>>();
+
         enemyCoeff = getEnemiesKilled(playerMetrics);
         coinCoeff = playerMetrics.coinsCollected;
         hillCoeff = playerMetrics.jumpsNumber;
@@ -39,7 +46,9 @@ public class GenerationValues {
         hillClusterSize = 7;
         avgHillsInCluster = 2;
         avgeBlocksToRow = 4;
+
         fixCoeffs(playerMetrics);
+        identifyBiomesAndAdjust();
         normalizeCoeffs(totalSaturation);
     }
     private double coeffTotal(){
@@ -76,6 +85,9 @@ public class GenerationValues {
             biome = new Hilly();
             biome.changeToBiome(this);
             return;
+        }
+        else{
+           biome = new Normal();
         }
 
     }
@@ -195,5 +207,13 @@ public class GenerationValues {
 
     public void setTotalSaturation(double totalSaturation) {
         this.totalSaturation = totalSaturation;
+    }
+
+    public ArrayList<ArrayList<Integer>> getEnemyClusterTypes() {
+        return enemyClusterTypes;
+    }
+
+    public void setEnemyClusterTypes(ArrayList<ArrayList<Integer>> enemyClusterTypes) {
+        this.enemyClusterTypes = enemyClusterTypes;
     }
 }
