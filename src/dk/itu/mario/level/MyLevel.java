@@ -364,7 +364,7 @@ public class MyLevel extends Level{
 		    			for (int y = 0; y < heightmap[x][0]; y++) {
 		    				if (getBlock(x,y) != 0) {
 		    					if (random.nextInt(3) == 0)
-		    		    			setSpriteTemplate(x, y - 1, new SpriteTemplate(enemies.get(j), random.nextInt(35) < difficulty));
+		    		    			setSpriteTemplate(x, y - 1, EnemyMap.getEnemyFromInt(enemies.get(j)));
 		    	                	ENEMIES++;
 		    						break;
 		    				}
