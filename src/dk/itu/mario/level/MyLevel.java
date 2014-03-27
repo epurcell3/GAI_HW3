@@ -332,7 +332,7 @@ public class MyLevel extends Level{
 	    	            }
 	    	            if (xTube >= xo + heightmap[xo][0] - 2) xTube += 10;
 
-	    	            if (x == xTube && random.nextInt(11) < difficulty + 1)
+	    	            if (x == xTube && random.nextInt(11) < difficulty + 1 && values.getBiome().biomeName() != "Hilly")
 	    	            {
 	    	                setSpriteTemplate(x, tubeHeight, new SpriteTemplate(Enemy.ENEMY_FLOWER, false));
 	    	                ENEMIES++;
