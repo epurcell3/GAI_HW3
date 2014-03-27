@@ -112,6 +112,7 @@ public class GenerationValues {
             return;
         }
         biome = new Normal();
+        biome.changeToBiome(this);
     }
     public double getEnemyCoeff() {
         return enemyCoeff;
