@@ -17,8 +17,8 @@ public class MyLevel extends Level{
 	 public   int BLOCKS_POWER = 0; // the number of power blocks
 	 public   int COINS = 0; //These are the coins in boxes that Mario collect
 
- 
-	private static Random levelSeedRandom = new Random();
+
+	 	private static Random levelSeedRandom = new Random();
 	    public static long lastSeed;
 
 	    Random random;
@@ -28,9 +28,14 @@ public class MyLevel extends Level{
 	    private int type;
 		private int gaps;
 		
+		private int[][] heightmap;
+		private int[] highestlevel;
+		
 		public MyLevel(int width, int height)
 	    {
 			super(width, height);
+			heightmap = new int[width][2];
+			highestlevel = new int[width];
 	    }
 
 
@@ -51,7 +56,7 @@ public class MyLevel extends Level{
 
 	        //create the start location
 	        int length = 0;
-	        length += buildStraight(0, width, true);
+	        length += setFloor(0, width, true);
 
 	        //create all of the medium sections
 	        while (length < width - 64)
@@ -64,36 +69,38 @@ public class MyLevel extends Level{
 //				length += buildTubes(length, width-length);
 //				length += buildCannons(length, width-length);
 	        	
-	        	double hill = random.nextDouble() * values.getHillCoeff();
-	        	double straight = random.nextDouble() * (1 - values.getHillCoeff());
-	        	double hole = random.nextDouble() * values.getHoleCoeff();
+//	        	double hill = random.nextDouble() * values.getHillCoeff();
+//	        	double straight = random.nextDouble() * (1 - values.getHillCoeff());
+//	        	double hole = random.nextDouble() * values.getHoleCoeff();
+//	        	
+//	        	if (hill > straight && hill > hole)
+//	        	{
+//        			length += buildHillStraight(length, width-length);
+//	        	}
+//	        	else if (straight > hill && straight > hole)
+//	        	{
+//	        		int choice = random.nextInt(3);
+//	        		switch(choice)
+//	        		{
+//	        		case 0:
+//	        			length += buildStraight(length, width - length, false);
+//        				break;
+//        			case 1:
+//        				length += buildCannons(length, width - length);
+//        				break;
+//        			case 2:
+//        				length += buildTubes(length, width - length);
+//        				break;
+//        			}
+//	        	}
+//	        	else //if (hole > hill && hole > straight)
+//	        	{
+//	        		length += buildJump(length, width-length);
+//	        	}
 	        	
-	        	if (hill > straight && hill > hole)
-	        	{
-        			length += buildHillStraight(length, width-length);
-	        	}
-	        	else if (straight > hill && straight > hole)
-	        	{
-	        		int choice = random.nextInt(3);
-	        		switch(choice)
-	        		{
-	        		case 0:
-	        			length += buildStraight(length, width - length, false);
-        				break;
-        			case 1:
-        				length += buildCannons(length, width - length);
-        				break;
-        			case 2:
-        				length += buildTubes(length, width - length);
-        				break;
-        			}
-	        	}
-	        	else //if (hole > hill && hole > straight)
-	        	{
-	        		length += buildJump(length, width-length);
-	        	}
+	        	length += setFloor(length, width - length, false);
 	        }
-
+        	
 	        //set the end piece
 	        int floor = height - 1 - random.nextInt(4);
 
@@ -103,14 +110,54 @@ public class MyLevel extends Level{
 	        // fills the end piece
 	        for (int x = length; x < width; x++)
 	        {
-	            for (int y = 0; y < height; y++)
-	            {
-	                if (y >= floor)
-	                {
-	                    setBlock(x, y, GROUND);
-	                }
-	            }
+	            heightmap[x][0] = floor;
+	            heightmap[x][1] = -1;
+	            highestlevel[x] = floor;
 	        }
+	        
+	        //Set hills
+    		int nclusters = (int)(width / values.getHillClusterSize() * values.getHillCoeff());
+	        for (int i = 0; i < nclusters; i++)
+	        {
+        		int xo = random.nextInt(xExit - 24) + 4;
+        		int nhills = (int)(random.nextGaussian() * values.getAvgHillsInCluster()/2) + values.getAvgHillsInCluster();
+        		for (int j = 0; j < nhills; j++)
+        		{
+        			//Pick an unused x as a starting point.
+        			int x;
+        			do {
+        				x = (int)(random.nextGaussian() * values.getHillClusterSize()) + xo;
+        			} while (heightmap[x][1] != -1);
+        			//Pick an unused length l where x+l isn't used.
+        			int l;
+        			do {
+        				l = random.nextInt(5) + 3;
+        			} while (heightmap[x+l][1] != -1);
+        			//Pick a height
+        			int lev = highestlevel[x];
+        			for (int k = 0; k < l; k++)
+        			{
+        				if (highestlevel[x+k] < lev) //silly counting downwards...
+        					lev = highestlevel[x+k];
+        			}
+        			int h = lev - random.nextInt(3) - 2;
+        			//Set the heights
+        			heightmap[x][1] = h;
+        			heightmap[x+l][1] = h;
+        			for (int k = 0; k < l; k++)
+        			{
+        				highestlevel[x+k] = heightmap[x][1];
+        			}
+        		}
+	        }
+	        
+	        //Set holes
+	        for (int x = 10; x < xExit - 8; x++)
+	        {
+	        	
+	        }
+	        
+	        fillMap();
 
 	        if (type == LevelInterface.TYPE_CASTLE || type == LevelInterface.TYPE_UNDERGROUND)
 	        {
@@ -135,6 +182,76 @@ public class MyLevel extends Level{
 
 	        fixWalls();
 
+	    }
+	    
+	    private int setFloor(int xo, int maxLength, boolean safe)
+	    {
+	    	
+	    	int adjuster = Math.abs((int)(random.nextGaussian() * values.getHillClusterSize()/2));
+	    	if (adjuster < -1 * values.getHillClusterSize() + 4)
+	    		adjuster = -1 * values.getHillClusterSize() + 4;
+	        int length = adjuster + values.getHillClusterSize() * 2;
+	        
+	        if (safe)
+	        	length = 10 + random.nextInt(5);
+
+	        if (length > maxLength)
+	        	length = maxLength;
+
+	        int floor = height - 1 - random.nextInt(4);
+
+	        //runs from the specified x position to the length of the segment
+	        for (int x = xo; x < xo + length; x++)
+	        {
+	            heightmap[x][0] = floor;
+	            heightmap[x][1] = -1;
+	            highestlevel[x] = floor;
+	        }
+	        return length;
+	    }
+	    
+	    private void fillMap()
+	    {
+	    	//fill floor
+	    	for (int x = 0; x < width; x++) {
+	    		for (int y = 0; y < height; y++) {
+	    			
+	    			if (y >= heightmap[x][0]) {
+	                    setBlock(x, y, GROUND);
+	    			}
+	    		}
+	    	}
+	    	
+	    	//fill in hills
+	    	boolean[] used = new boolean[width];
+	    	for (int i = 0; i < width; i++)
+	    		used[i] = false;
+	    	for (int xo = 0; xo < width; xo++) {
+	    		if (heightmap[xo][1] != -1 && !used[xo]) {
+	    			int x = xo;
+	    			do {
+	    				for (int y = heightmap[xo][1]; y < heightmap[x][0]; y++) {
+	    					int xx = 5;
+                            if (x == xo) xx = 4;
+                            else if (heightmap[x+1][1] == heightmap[xo][1]) xx = 6;
+                            int yy = 9;
+                            if (y == heightmap[xo][1]) yy = 8;
+
+                            if (getBlock(x, y) == 0)
+                            {
+                                setBlock(x, y, (byte) (xx + yy * 16));
+                            }
+                            else
+                            {
+                                if (getBlock(x, y) == HILL_TOP_LEFT) setBlock(x, y, HILL_TOP_LEFT_IN);
+                                if (getBlock(x, y) == HILL_TOP_RIGHT) setBlock(x, y, HILL_TOP_RIGHT_IN);
+                            }
+	    				}
+	    				x++;
+	    			} while (heightmap[x][1] != heightmap[xo][1]);
+	    			used[x] = true;
+	    		}
+	    	}
 	    }
 
 	    private int buildJump(int xo, int maxLength)
@@ -273,8 +390,8 @@ public class MyLevel extends Level{
 	            }
 	            else
 	            {
-	                int l = random.nextInt(5) + 3;
-	                int xxo = random.nextInt(length - l - 2) + xo + 1;
+	                int l = random.nextInt(5) + 3; //length
+	                int xxo = random.nextInt(length - l - 2) + xo + 1; //start of hill
 
 	                if (occupied[xxo - xo] || occupied[xxo - xo + l] || occupied[xxo - xo - 1] || occupied[xxo - xo + l + 1])
 	                {
