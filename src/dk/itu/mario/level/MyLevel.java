@@ -60,44 +60,7 @@ public class MyLevel extends Level{
 
 	        //create all of the medium sections
 	        while (length < width - 64)
-	        {
-	            //length += buildZone(length, width - length);
-//				length += buildStraight(length, width-length, false);
-//				length += buildStraight(length, width-length, false);
-//				length += buildHillStraight(length, width-length);
-//				length += buildJump(length, width-length);
-//				length += buildTubes(length, width-length);
-//				length += buildCannons(length, width-length);
-	        	
-//	        	double hill = random.nextDouble() * values.getHillCoeff();
-//	        	double straight = random.nextDouble() * (1 - values.getHillCoeff());
-//	        	double hole = random.nextDouble() * values.getHoleCoeff();
-//	        	
-//	        	if (hill > straight && hill > hole)
-//	        	{
-//        			length += buildHillStraight(length, width-length);
-//	        	}
-//	        	else if (straight > hill && straight > hole)
-//	        	{
-//	        		int choice = random.nextInt(3);
-//	        		switch(choice)
-//	        		{
-//	        		case 0:
-//	        			length += buildStraight(length, width - length, false);
-//        				break;
-//        			case 1:
-//        				length += buildCannons(length, width - length);
-//        				break;
-//        			case 2:
-//        				length += buildTubes(length, width - length);
-//        				break;
-//        			}
-//	        	}
-//	        	else //if (hole > hill && hole > straight)
-//	        	{
-//	        		length += buildJump(length, width-length);
-//	        	}
-	        	
+	        {	
 	        	length += setFloor(length, width - length, false);
 	        }
         	
@@ -134,9 +97,17 @@ public class MyLevel extends Level{
                         t++;
                         if(t > 50){
                             toContinue = true;
+                            break;
                         }
 
         			} while (heightmap[x][1] != -1 && !toContinue);
+        			if(toContinue)
+        				continue;
+        			if (random.nextInt(20) == 0) //5% chance to spawn a tube
+        			{
+        				heightmap[x][1] = -2;
+        				continue;
+        			}
         			//Pick an unused length l where x+l isn't used.
         			int l;
                     t = 0;
@@ -145,6 +116,7 @@ public class MyLevel extends Level{
                         t++;
                         if(t > 50){
                             toContinue = true;
+                            break;
                         }
         			} while (heightmap[x+l][1] != -1 && ! toContinue);
         			//Pick a height
@@ -324,7 +296,7 @@ public class MyLevel extends Level{
 	    	for (int i = 0; i < width; i++)
 	    		used[i] = false;
 	    	for (int xo = 0; xo < width; xo++) {
-	    		if (heightmap[xo][1] != -1 && !used[xo]) {
+	    		if (heightmap[xo][1] > 0 && !used[xo]) {
 	    			int x = xo;
 	    			do {
 	    				for (int y = heightmap[xo][1]; y < heightmap[x][0]; y++) {
@@ -348,6 +320,44 @@ public class MyLevel extends Level{
 	    			} while (heightmap[x][1] != heightmap[xo][1]);
 	    			used[x] = true;
 	    		}
+	    		else if (heightmap[xo][1] == -2) { //spawn tube
+	    			int tubeHeight = heightmap[xo][0] - random.nextInt(2) - 2;
+	    	        int xTube = xo + 1 + random.nextInt(4);
+	    	        for (int x = xo; x <= xo + 3; x++)
+	    	        {
+	    	            if (x > xTube + 1)
+	    	            {
+	    	                xTube += 3 + random.nextInt(4);
+	    	                tubeHeight = heightmap[xo][0] - random.nextInt(2) - 2;
+	    	            }
+	    	            if (xTube >= xo + heightmap[xo][0] - 2) xTube += 10;
+
+	    	            if (x == xTube && random.nextInt(11) < difficulty + 1)
+	    	            {
+	    	                setSpriteTemplate(x, tubeHeight, new SpriteTemplate(Enemy.ENEMY_FLOWER, false));
+	    	                ENEMIES++;
+	    	            }
+
+	    	            for (int y = 0; y < heightmap[xo][0]; y++)
+	    	            {
+    	                    if ((x == xTube || x == xTube + 1) && y >= tubeHeight)
+    	                    {
+    	                        int xPic = 10 + x - xTube;
+
+    	                        if (y == tubeHeight)
+    	                        {
+    	                        	//tube top
+    	                            setBlock(x, y, (byte) (xPic + 0 * 16));
+    	                        }
+    	                        else
+    	                        {
+    	                        	//tube side
+    	                            setBlock(x, y, (byte) (xPic + 1 * 16));
+    	                        }
+    	                    }
+	    	            }
+	    	        }
+	    		}
 	    	}
 	    	
 	    	int nEnemyGroups = (int)(width / values.getEnemyClusterSize() * values.getEnemyCoeff());
@@ -361,12 +371,32 @@ public class MyLevel extends Level{
 		    			int x = (int)(random.nextGaussian() * values.getEnemyClusterSize()) + x0;
 		    			if (x < 15) x = 15;
 		    			if (x > xExit - 32) x = xExit - 32;
-		    			for (int y = 0; y < heightmap[x][0]; y++) {
+		    			int y;
+		    			for (y = 0; y < heightmap[x][0]; y++) {
 		    				if (getBlock(x,y) != 0) {
 		    					if (random.nextInt(3) == 0)
-		    		    			setSpriteTemplate(x, y - 1, EnemyMap.getEnemyFromInt(enemies.get(j)));
-		    	                	ENEMIES++;
 		    						break;
+		    				}
+		    			}
+		    			if (enemies.get(j) != 9) {
+			    			setSpriteTemplate(x, y - 1, EnemyMap.getEnemyFromInt(enemies.get(j)));
+		                	ENEMIES++;
+		    			}
+		    			else {
+		    				int cannonHeight = y - random.nextInt(5);
+		    				for (int y0 = cannonHeight; y0 < y ; y0++) {
+		    					if (y0 == cannonHeight)
+		                        {
+		                            setBlock(x, y0, (byte) (14 + 0 * 16));
+		                        }
+		                        else if (y0 == cannonHeight + 1)
+		                        {
+		                            setBlock(x, y0, (byte) (14 + 1 * 16));
+		                        }
+		                        else
+		                        {
+		                            setBlock(x, y0, (byte) (14 + 2 * 16));
+		                        }
 		    				}
 		    			}
 		    		}
