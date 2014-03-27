@@ -1,10 +1,7 @@
 package dk.itu.mario.level;
 
 import dk.itu.mario.MarioInterface.GamePlay;
-import dk.itu.mario.level.Biomes.Biome;
-import dk.itu.mario.level.Biomes.Enemies;
-import dk.itu.mario.level.Biomes.Hilly;
-import dk.itu.mario.level.Biomes.Normal;
+import dk.itu.mario.level.Biomes.*;
 
 import java.util.ArrayList;
 
@@ -86,7 +83,8 @@ public class GenerationValues {
     private void fixCoeffs(GamePlay playerMetrics){
         bricksCoeff = (playerMetrics.percentageBlocksDestroyed * Integer.valueOf(playerMetrics.totalEmptyBlocks).doubleValue()) + playerMetrics.powerBlocksDestroyed +  playerMetrics.coinBlocksDestroyed;
         hillCoeff += playerMetrics.aimlessJumps * 2;
-        hillCoeff /= (playerMetrics.totalTime/2);
+
+        hillCoeff /= (playerMetrics.totalTime * 2);
         holeCoeff -=  (playerMetrics.aimlessJumps );
         holeCoeff  /= 10;
         if (holeCoeff < 0)
@@ -108,6 +106,12 @@ public class GenerationValues {
         Enemies enemies = new Enemies();
         if(enemies.is(this)){
             biome = enemies;
+            biome.changeToBiome(this);
+            return;
+        }
+        Greedy greedy = new Greedy();
+        if(greedy.is(this)){
+            biome = greedy;
             biome.changeToBiome(this);
             return;
         }

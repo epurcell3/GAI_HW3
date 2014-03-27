@@ -7,29 +7,39 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * User: Ryan
- * Date: 3/26/14
- * Time: 2:52 PM
+ * Date: 3/27/14
+ * Time: 5:58 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Hilly implements Biome {
-    public Hilly(){
-
-    }
-
+public class Greedy implements Biome {
+    @Override
     public void changeToBiome(GenerationValues generationValues) {
-        generationValues.setHillCoeff(generationValues.getHillCoeff() * 3);
-        generationValues.setHoleCoeff(generationValues.getHoleCoeff() * 3 / 2);
-        generationValues.setCoinCoeff(generationValues.getCoinCoeff()  / 2);
+        generationValues.setHillCoeff(generationValues.getHillCoeff() / 2);
+        generationValues.setHoleCoeff(generationValues.getHoleCoeff() /5);
+        generationValues.setCoinCoeff(generationValues.getCoinCoeff()  * 5);
         generationValues.setEnemyCoeff(generationValues.getEnemyCoeff() / 2);
-        generationValues.setBricksCoeff(generationValues.getBricksCoeff() / 2);
+        generationValues.setBricksCoeff(generationValues.getBricksCoeff());
         generationValues.setAvgEnemiesInCuster(1);
-        generationValues.setCoinClusterSize(6);
-        generationValues.setAvgCoinsInCluster(3);
-        generationValues.setHillClusterSize(8);
-        generationValues.setAvgHillsInCluster(6);
-        generationValues.setAvgBlocksInRow(5);
+        generationValues.setCoinClusterSize(15);
+        generationValues.setAvgCoinsInCluster(12);
+        generationValues.setHillClusterSize(10);
+        generationValues.setAvgHillsInCluster(1);
+        generationValues.setAvgBlocksInRow(8);
         generationValues.setTotalSaturation(1.4);
         setEnemyClusters(generationValues);
+    }
+
+    @Override
+    public String biomeName() {
+        return "Greedy";  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean is(GenerationValues values) {
+        if(values.getCoinCoeff() > (values.getEnemyCoeff() + values.getHillCoeff())){
+            return true;
+        }
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
     private void setEnemyClusters(GenerationValues generationValues){
         ArrayList<ArrayList<Integer>>  clusters = new ArrayList<ArrayList<Integer>>();
@@ -57,16 +67,5 @@ public class Hilly implements Biome {
         cluster5.add(0);
         clusters.add(cluster5);
         generationValues.setEnemyClusterTypes(clusters);
-    }
-    public String biomeName(){
-        return "Hilly";
-    }
-
-    @Override
-    public boolean is(GenerationValues values) {
-        if(values.getHillCoeff() > ((values.getCoinCoeff() + values.getEnemyCoeff() +values.getBricksCoeff()) /1.5 )){
-            return  true;
-        }
-        return  false;
     }
 }
