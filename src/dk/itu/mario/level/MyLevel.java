@@ -323,7 +323,7 @@ public class MyLevel extends Level{
 	    		else if (heightmap[xo][1] == -2) { //spawn tube
 	    			int tubeHeight = heightmap[xo][0] - random.nextInt(2) - 2;
 	    	        int xTube = xo + 1 + random.nextInt(4);
-	    	        for (int x = xo; x < xo + 3; x++)
+	    	        for (int x = xo; x <= xo + 3; x++)
 	    	        {
 	    	            if (x > xTube + 1)
 	    	            {
@@ -383,7 +383,7 @@ public class MyLevel extends Level{
 		                	ENEMIES++;
 		    			}
 		    			else {
-		    				int cannonHeight = random.nextInt(y-1);
+		    				int cannonHeight = y - random.nextInt(5);
 		    				for (int y0 = cannonHeight; y0 < y ; y0++) {
 		    					if (y0 == cannonHeight)
 		                        {
