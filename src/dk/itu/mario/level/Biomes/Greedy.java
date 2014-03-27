@@ -36,7 +36,7 @@ public class Greedy implements Biome {
 
     @Override
     public boolean is(GenerationValues values) {
-        if(values.getCoinCoeff() > (values.getEnemyCoeff() + values.getHillCoeff())){
+        if(values.getCoinCoeff() > (values.getEnemyCoeff() + values.getHillCoeff())/1.2){
             return true;
         }
         return false;  //To change body of implemented methods use File | Settings | File Templates.

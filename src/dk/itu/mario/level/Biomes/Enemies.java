@@ -70,7 +70,7 @@ public class Enemies implements Biome {
 
     @Override
     public boolean is(GenerationValues values) {
-        if(values.getEnemyCoeff() > values.getHillCoeff() + values.getCoinCoeff()){
+        if(values.getEnemyCoeff() > (values.getHillCoeff() + values.getCoinCoeff()) * 1.2){
               return  true;
         }
         return false;  //To change body of implemented methods use File | Settings | File Templates.

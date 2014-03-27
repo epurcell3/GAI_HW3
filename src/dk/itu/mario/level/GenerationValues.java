@@ -39,8 +39,8 @@ public class GenerationValues {
             bricksCoeff = 0.25;
             holeCoeff = 0.1;
             totalSaturation = 1.0;
-            enemyClusterSize = 3;
-            avgEnemiesInCuster = 3;
+            enemyClusterSize = 9;
+            avgEnemiesInCuster = 1;
             coinClusterSize = 8;
             avgCoinsInCluster = 5;
             hillClusterSize = 7;
