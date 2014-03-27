@@ -97,11 +97,17 @@ public class MyLevel extends Level{
                         t++;
                         if(t > 50){
                             toContinue = true;
+                            break;
                         }
 
         			} while (heightmap[x][1] != -1 && !toContinue);
         			if(toContinue)
         				continue;
+        			if (random.nextInt(20) == 0) //5% chance to spawn a tube
+        			{
+        				heightmap[x][1] = -2;
+        				continue;
+        			}
         			//Pick an unused length l where x+l isn't used.
         			int l;
                     t = 0;
@@ -290,7 +296,7 @@ public class MyLevel extends Level{
 	    	for (int i = 0; i < width; i++)
 	    		used[i] = false;
 	    	for (int xo = 0; xo < width; xo++) {
-	    		if (heightmap[xo][1] != -1 && !used[xo]) {
+	    		if (heightmap[xo][1] > 0 && !used[xo]) {
 	    			int x = xo;
 	    			do {
 	    				for (int y = heightmap[xo][1]; y < heightmap[x][0]; y++) {
@@ -313,6 +319,44 @@ public class MyLevel extends Level{
 	    				x++;
 	    			} while (heightmap[x][1] != heightmap[xo][1]);
 	    			used[x] = true;
+	    		}
+	    		else if (heightmap[xo][1] == -2) { //spawn tube
+	    			int tubeHeight = heightmap[xo][0] - random.nextInt(2) - 2;
+	    	        int xTube = xo + 1 + random.nextInt(4);
+	    	        for (int x = xo; x < xo + 3; x++)
+	    	        {
+	    	            if (x > xTube + 1)
+	    	            {
+	    	                xTube += 3 + random.nextInt(4);
+	    	                tubeHeight = heightmap[xo][0] - random.nextInt(2) - 2;
+	    	            }
+	    	            if (xTube >= xo + heightmap[xo][0] - 2) xTube += 10;
+
+	    	            if (x == xTube && random.nextInt(11) < difficulty + 1)
+	    	            {
+	    	                setSpriteTemplate(x, tubeHeight, new SpriteTemplate(Enemy.ENEMY_FLOWER, false));
+	    	                ENEMIES++;
+	    	            }
+
+	    	            for (int y = 0; y < heightmap[xo][0]; y++)
+	    	            {
+    	                    if ((x == xTube || x == xTube + 1) && y >= tubeHeight)
+    	                    {
+    	                        int xPic = 10 + x - xTube;
+
+    	                        if (y == tubeHeight)
+    	                        {
+    	                        	//tube top
+    	                            setBlock(x, y, (byte) (xPic + 0 * 16));
+    	                        }
+    	                        else
+    	                        {
+    	                        	//tube side
+    	                            setBlock(x, y, (byte) (xPic + 1 * 16));
+    	                        }
+    	                    }
+	    	            }
+	    	        }
 	    		}
 	    	}
 	    	
@@ -340,7 +384,7 @@ public class MyLevel extends Level{
 		    			}
 		    			else {
 		    				int cannonHeight = random.nextInt(y-1);
-		    				for (int y0 = cannonHeight; y0 < y - 1; y0++) {
+		    				for (int y0 = cannonHeight; y0 < y ; y0++) {
 		    					if (y0 == cannonHeight)
 		                        {
 		                            setBlock(x, y0, (byte) (14 + 0 * 16));
