@@ -119,21 +119,38 @@ public class MyLevel extends Level{
     		int nclusters = (int)(width / values.getHillClusterSize() * values.getHillCoeff());
 	        for (int i = 0; i < nclusters; i++)
 	        {
-        		int xo = random.nextInt(xExit - 32) + 4;
+        		int xo = random.nextInt(xExit - 64) + 4;
         		int nhills = (int)(random.nextGaussian() * values.getAvgHillsInCluster()/2) + values.getAvgHillsInCluster();
         		for (int j = 0; j < nhills; j++)
         		{
         			//Pick an unused x as a starting point.
         			int x;
+                    int t = 0;
+                    boolean toContinue = false;
         			do {
-        				x = (int)(random.nextGaussian() * values.getHillClusterSize()) + xo;
-        			} while (heightmap[x][1] != -1);
+                        do{
+        				    x = (int)(random.nextGaussian() * values.getHillClusterSize()) + xo;
+                        }while (x < 0);
+                        t++;
+                        if(t > 50){
+                            toContinue = true;
+                        }
+
+        			} while (heightmap[x][1] != -1 && !toContinue);
         			//Pick an unused length l where x+l isn't used.
         			int l;
+                    t = 0;
         			do {
         				l = random.nextInt(5) + 3;
-        			} while (heightmap[x+l][1] != -1);
+                        t++;
+                        if(t > 50){
+                            toContinue = true;
+                        }
+        			} while (heightmap[x+l][1] != -1 && ! toContinue);
         			//Pick a height
+                    if(toContinue){
+                        continue;
+                    }
         			int lev = highestlevel[x];
         			for (int k = 0; k < l; k++)
         			{
