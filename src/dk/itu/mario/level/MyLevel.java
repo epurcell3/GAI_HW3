@@ -60,44 +60,7 @@ public class MyLevel extends Level{
 
 	        //create all of the medium sections
 	        while (length < width - 64)
-	        {
-	            //length += buildZone(length, width - length);
-//				length += buildStraight(length, width-length, false);
-//				length += buildStraight(length, width-length, false);
-//				length += buildHillStraight(length, width-length);
-//				length += buildJump(length, width-length);
-//				length += buildTubes(length, width-length);
-//				length += buildCannons(length, width-length);
-	        	
-//	        	double hill = random.nextDouble() * values.getHillCoeff();
-//	        	double straight = random.nextDouble() * (1 - values.getHillCoeff());
-//	        	double hole = random.nextDouble() * values.getHoleCoeff();
-//	        	
-//	        	if (hill > straight && hill > hole)
-//	        	{
-//        			length += buildHillStraight(length, width-length);
-//	        	}
-//	        	else if (straight > hill && straight > hole)
-//	        	{
-//	        		int choice = random.nextInt(3);
-//	        		switch(choice)
-//	        		{
-//	        		case 0:
-//	        			length += buildStraight(length, width - length, false);
-//        				break;
-//        			case 1:
-//        				length += buildCannons(length, width - length);
-//        				break;
-//        			case 2:
-//        				length += buildTubes(length, width - length);
-//        				break;
-//        			}
-//	        	}
-//	        	else //if (hole > hill && hole > straight)
-//	        	{
-//	        		length += buildJump(length, width-length);
-//	        	}
-	        	
+	        {	
 	        	length += setFloor(length, width - length, false);
 	        }
         	
@@ -137,6 +100,8 @@ public class MyLevel extends Level{
                         }
 
         			} while (heightmap[x][1] != -1 && !toContinue);
+        			if(toContinue)
+        				continue;
         			//Pick an unused length l where x+l isn't used.
         			int l;
                     t = 0;
@@ -145,6 +110,7 @@ public class MyLevel extends Level{
                         t++;
                         if(t > 50){
                             toContinue = true;
+                            break;
                         }
         			} while (heightmap[x+l][1] != -1 && ! toContinue);
         			//Pick a height
@@ -361,12 +327,32 @@ public class MyLevel extends Level{
 		    			int x = (int)(random.nextGaussian() * values.getEnemyClusterSize()) + x0;
 		    			if (x < 15) x = 15;
 		    			if (x > xExit - 32) x = xExit - 32;
-		    			for (int y = 0; y < heightmap[x][0]; y++) {
+		    			int y;
+		    			for (y = 0; y < heightmap[x][0]; y++) {
 		    				if (getBlock(x,y) != 0) {
 		    					if (random.nextInt(3) == 0)
-		    		    			setSpriteTemplate(x, y - 1, EnemyMap.getEnemyFromInt(enemies.get(j)));
-		    	                	ENEMIES++;
 		    						break;
+		    				}
+		    			}
+		    			if (enemies.get(j) != 9) {
+			    			setSpriteTemplate(x, y - 1, EnemyMap.getEnemyFromInt(enemies.get(j)));
+		                	ENEMIES++;
+		    			}
+		    			else {
+		    				int cannonHeight = random.nextInt(y-1);
+		    				for (int y0 = cannonHeight; y0 < y - 1; y0++) {
+		    					if (y0 == cannonHeight)
+		                        {
+		                            setBlock(x, y0, (byte) (14 + 0 * 16));
+		                        }
+		                        else if (y0 == cannonHeight + 1)
+		                        {
+		                            setBlock(x, y0, (byte) (14 + 1 * 16));
+		                        }
+		                        else
+		                        {
+		                            setBlock(x, y0, (byte) (14 + 2 * 16));
+		                        }
 		    				}
 		    			}
 		    		}
