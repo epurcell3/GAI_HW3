@@ -70,11 +70,23 @@ public class MyLevel extends Level{
 	        	
 	        	if (hill > straight && hill > hole)
 	        	{
-	        		length += buildHillStraight(length, width-length);
+        			length += buildHillStraight(length, width-length);
 	        	}
 	        	else if (straight > hill && straight > hole)
 	        	{
-	        		length += buildStraight(length, width - length, false);
+	        		int choice = random.nextInt(3);
+	        		switch(choice)
+	        		{
+	        		case 0:
+	        			length += buildStraight(length, width - length, false);
+        				break;
+        			case 1:
+        				length += buildCannons(length, width - length);
+        				break;
+        			case 2:
+        				length += buildTubes(length, width - length);
+        				break;
+        			}
 	        	}
 	        	else //if (hole > hill && hole > straight)
 	        	{
@@ -124,7 +136,6 @@ public class MyLevel extends Level{
 	        fixWalls();
 
 	    }
-
 
 	    private int buildJump(int xo, int maxLength)
 	    {	gaps++;
@@ -223,9 +234,14 @@ public class MyLevel extends Level{
 
 	    private int buildHillStraight(int xo, int maxLength)
 	    {
-	        int length = random.nextInt(10) + 10;
+	    	//Set the length of the segment
+	    	int adjuster = Math.abs((int)(random.nextGaussian() * values.getHillClusterSize()/2));
+	    	if (adjuster < -1 * values.getHillClusterSize() + 4)
+	    		adjuster = -1 * values.getHillClusterSize() + 4;
+	        int length = adjuster + values.getHillClusterSize() * 2;
 	        if (length > maxLength) length = maxLength;
 
+	        //Set the floor of the segment
 	        int floor = height - 1 - random.nextInt(4);
 	        for (int x = xo; x < xo + length; x++)
 	        {
@@ -238,8 +254,10 @@ public class MyLevel extends Level{
 	            }
 	        }
 
+	        //Inputs the segment start and end with a buffer of one, at a level one higher than the floor
 	        addEnemyLine(xo + 1, xo + length - 1, floor - 1);
 
+	        //Start buildin the hills
 	        int h = floor;
 
 	        boolean keepGoing = true;
@@ -379,8 +397,11 @@ public class MyLevel extends Level{
 
 	    private int buildStraight(int xo, int maxLength, boolean safe)
 	    {
-	        int length = random.nextInt(10) + 2;
-
+	    	int adjuster = Math.abs((int)(random.nextGaussian() * values.getHillClusterSize()/2));
+	    	if (adjuster < -1 * values.getHillClusterSize() + 4)
+	    		adjuster = -1 * values.getHillClusterSize() + 4;
+	        int length = adjuster + values.getHillClusterSize() * 2;
+	        
 	        if (safe)
 	        	length = 10 + random.nextInt(5);
 
