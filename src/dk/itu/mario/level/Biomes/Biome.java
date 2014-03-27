@@ -12,4 +12,5 @@ import dk.itu.mario.level.GenerationValues;
 public interface Biome {
     public abstract void changeToBiome(GenerationValues generationValues);
     public abstract String biomeName();
+    public abstract boolean is(GenerationValues values);
 }

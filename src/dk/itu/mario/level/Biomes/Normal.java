@@ -60,4 +60,7 @@ public class Normal implements Biome {
 
 
     }
+    public boolean is(GenerationValues values){
+        return  true;
+    }
 }

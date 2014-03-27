@@ -2,6 +2,7 @@ package dk.itu.mario.level;
 
 import dk.itu.mario.MarioInterface.GamePlay;
 import dk.itu.mario.level.Biomes.Biome;
+import dk.itu.mario.level.Biomes.Enemies;
 import dk.itu.mario.level.Biomes.Hilly;
 import dk.itu.mario.level.Biomes.Normal;
 
@@ -81,21 +82,19 @@ public class GenerationValues {
         bricksCoeff /= ((playerMetrics.totalEmptyBlocks + playerMetrics.totalCoinBlocks + playerMetrics.totalpowerBlocks) /2);
     }
     private void identifyBiomesAndAdjust(){
-        if(isHilly()){
-            biome = new Hilly();
+        Hilly hilly = new Hilly();
+        if(hilly.is(this)){
+            biome = hilly;
             biome.changeToBiome(this);
             return;
         }
-        else{
+        Enemies enemies = new Enemies();
+        if(enemies.is(this)){
+            biome = enemies;
+            biome.changeToBiome(this);
+            return;
+        }
            biome = new Normal();
-        }
-
-    }
-    private boolean isHilly(){
-        if(hillCoeff > ((coinCoeff + enemyCoeff +bricksCoeff) /2 )){
-            return  true;
-        }
-        return  false;
     }
     public double getEnemyCoeff() {
         return enemyCoeff;

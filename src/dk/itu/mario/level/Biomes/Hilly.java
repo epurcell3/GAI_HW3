@@ -61,4 +61,12 @@ public class Hilly implements Biome {
     public String biomeName(){
         return "Hilly";
     }
+
+    @Override
+    public boolean is(GenerationValues values) {
+        if(values.getHillCoeff() > ((values.getCoinCoeff() + values.getEnemyCoeff() +values.getBricksCoeff()) /2 )){
+            return  true;
+        }
+        return  false;
+    }
 }
