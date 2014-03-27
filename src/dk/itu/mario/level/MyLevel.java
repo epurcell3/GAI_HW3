@@ -119,7 +119,7 @@ public class MyLevel extends Level{
     		int nclusters = (int)(width / values.getHillClusterSize() * values.getHillCoeff());
 	        for (int i = 0; i < nclusters; i++)
 	        {
-        		int xo = random.nextInt(xExit - 24) + 4;
+        		int xo = random.nextInt(xExit - 32) + 4;
         		int nhills = (int)(random.nextGaussian() * values.getAvgHillsInCluster()/2) + values.getAvgHillsInCluster();
         		for (int j = 0; j < nhills; j++)
         		{
