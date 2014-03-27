@@ -243,6 +243,7 @@ public class MyLevel extends Level{
 	    {
 	    	//fill floor
 	    	int ncoins = 0;
+	    	int nblocks = 0;
 	    	for (int x = 0; x < width; x++) {
 	    		for (int y = 0; y < height; y++) {
 	    			
@@ -260,10 +261,59 @@ public class MyLevel extends Level{
 	    		}
 	    		else
 	    		{
-	    			if (heightmap[x][0] < height && heightmap[x][1] != heightmap[x][0] - 2 && x < xExit - 20 && x > 10)
+	    			if (heightmap[x][0] < height && highestlevel[x] != heightmap[x][0] - 2 && x < xExit - 20 && x > 10)
 	    			{
 	    				ncoins--;
-	    				setBlock(x, heightmap[x][0] - 2, COIN);
+	    				if (highestlevel[x] == -1)
+	    					setBlock(x, heightmap[x][0] - 2, COIN);
+	    				else
+	    					setBlock(x, highestlevel[x] -2, COIN);
+	    			}
+	    		}
+	    		if (nblocks == 0)
+	    		{
+	    			boolean blocks = random.nextDouble() * 2 < values.getBricksCoeff();
+	    			if (blocks) {
+	    				nblocks = Math.abs((int)(random.nextGaussian() * values.getAvgBlocksInRow()));
+	    				if (nblocks < 2)
+	    					nblocks = 0;
+	    			}
+	    		}
+	    		else
+	    		{
+	    			if (x < xExit -20 && x > 10 && heightmap[x][0] < height && heightmap[x-1][0] < height && heightmap[x+1][0] < height &&
+	    					highestlevel[x] == heightmap[x][0])
+	    			{
+	    				nblocks--;
+	    				if (random.nextInt(3) == 0)
+                        {
+                            if (random.nextInt(4) == 0)
+                            {
+                                setBlock(x, heightmap[x][0] - 4, BLOCK_POWERUP);
+                                BLOCKS_POWER++;
+                            }
+                            else
+                            {	//the fills a block with a hidden coin
+                                setBlock(x, heightmap[x][0] - 4, BLOCK_COIN);
+                                BLOCKS_COINS++;
+                            }
+                        }
+                        else if (random.nextInt(4) == 0)
+                        {
+                            if (random.nextInt(4) == 0)
+                            {
+                                setBlock(x, heightmap[x][0] - 4, (byte) (2 + 1 * 16));
+                            }
+                            else
+                            {
+                                setBlock(x, heightmap[x][0] - 4, (byte) (1 + 1 * 16));
+                            }
+                        }
+                        else
+                        {
+                            setBlock(x, heightmap[x][0] - 4, BLOCK_EMPTY);
+                            BLOCKS_EMPTY++;
+                        }
 	    			}
 	    		}
 	    	}
