@@ -268,6 +268,7 @@ public class MyLevel extends Level{
 	    					setBlock(x, heightmap[x][0] - 2, COIN);
 	    				else
 	    					setBlock(x, highestlevel[x] -2, COIN);
+	    				COINS++;
 	    			}
 	    		}
 	    		if (nblocks == 0)
