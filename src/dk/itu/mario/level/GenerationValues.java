@@ -35,20 +35,37 @@ public class GenerationValues {
     public GenerationValues(GamePlay playerMetrics){
         enemyClusterTypes = new ArrayList<ArrayList<Integer>>();
 
-        enemyCoeff = getEnemiesKilled(playerMetrics);
-        coinCoeff = playerMetrics.coinsCollected;
-        hillCoeff = playerMetrics.jumpsNumber;
-        holeCoeff = playerMetrics.jumpsNumber / (playerMetrics.timesOfDeathByFallingIntoGap + 1);
-        totalSaturation = 1.05;
-        enemyClusterSize = 3;
-        avgEnemiesInCuster = 3;
-        coinClusterSize = 8;
-        avgCoinsInCluster = 5;
-        hillClusterSize = 7;
-        avgHillsInCluster = 2;
-        avgeBlocksToRow = 4;
+        if(playerMetrics.totalTime == 0 ||  playerMetrics.totalEmptyBlocks == 0 || playerMetrics.totalEnemies == 0 || playerMetrics.totalCoins == 0){
+            enemyCoeff = 0.25;
+            coinCoeff = 0.2;
+            hillCoeff = 0.2;
+            bricksCoeff = 0.25;
+            holeCoeff = 0.1;
+            totalSaturation = 1.0;
+            enemyClusterSize = 3;
+            avgEnemiesInCuster = 3;
+            coinClusterSize = 8;
+            avgCoinsInCluster = 5;
+            hillClusterSize = 7;
+            avgHillsInCluster = 2;
+            avgeBlocksToRow = 4;
+        }
+        else{
+            enemyCoeff = getEnemiesKilled(playerMetrics);
+            coinCoeff = playerMetrics.coinsCollected;
+            hillCoeff = playerMetrics.jumpsNumber;
+            holeCoeff = playerMetrics.jumpsNumber / (playerMetrics.timesOfDeathByFallingIntoGap + 1);
+            totalSaturation = 1.05;
+            enemyClusterSize = 3;
+            avgEnemiesInCuster = 3;
+            coinClusterSize = 8;
+            avgCoinsInCluster = 5;
+            hillClusterSize = 7;
+            avgHillsInCluster = 2;
+            avgeBlocksToRow = 4;
 
-        fixCoeffs(playerMetrics);
+            fixCoeffs(playerMetrics);
+        }
         identifyBiomesAndAdjust();
         normalizeCoeffs(totalSaturation);
     }
@@ -78,7 +95,7 @@ public class GenerationValues {
         }
         enemyCoeff /= (playerMetrics.totalEnemies /2);
         coinCoeff -= (playerMetrics.coinBlocksDestroyed / 2);
-        coinCoeff /= (playerMetrics.totalCoins * 4 / 5);
+        coinCoeff /= (playerMetrics.totalCoins * 3 / 2);
         bricksCoeff /= ((playerMetrics.totalEmptyBlocks + playerMetrics.totalCoinBlocks + playerMetrics.totalpowerBlocks) /2);
     }
     private void identifyBiomesAndAdjust(){
@@ -94,7 +111,7 @@ public class GenerationValues {
             biome.changeToBiome(this);
             return;
         }
-           biome = new Normal();
+        biome = new Normal();
     }
     public double getEnemyCoeff() {
         return enemyCoeff;
