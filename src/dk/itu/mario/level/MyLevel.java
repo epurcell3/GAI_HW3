@@ -154,7 +154,15 @@ public class MyLevel extends Level{
 	        //Set holes
 	        for (int x = 10; x < xExit - 8; x++)
 	        {
-	        	
+	        	boolean hole = random.nextDouble() * 2 < values.getHoleCoeff();
+	        	if (hole) {
+	        		gaps++;
+	    	    	//jl: jump length
+	    	        int jl = random.nextInt(2) + 2;
+	    	        if (heightmap[x-1][0] < heightmap[x+jl+1][0])
+	    	        	continue;
+	    	        heightmap[x][0] = height + 1;
+	        	}
 	        }
 	        
 	        fillMap();
@@ -255,7 +263,8 @@ public class MyLevel extends Level{
 	    }
 
 	    private int buildJump(int xo, int maxLength)
-	    {	gaps++;
+	    {	
+	    	gaps++;
 	    	//jl: jump length
 	    	//js: the number of blocks that are available at either side for free
 	        int js = random.nextInt(4) + 2;
