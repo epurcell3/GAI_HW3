@@ -242,11 +242,28 @@ public class MyLevel extends Level{
 	    private void fillMap()
 	    {
 	    	//fill floor
+	    	int ncoins = 0;
 	    	for (int x = 0; x < width; x++) {
 	    		for (int y = 0; y < height; y++) {
 	    			
 	    			if (y >= heightmap[x][0]) {
 	                    setBlock(x, y, GROUND);
+	                    
+	    			}
+	    		}
+	    		if (ncoins == 0)
+	    		{
+		    		boolean coins = random.nextDouble() * 2 < values.getCoinCoeff();
+	                if (coins) {
+	                	ncoins = Math.abs((int)(random.nextGaussian() * values.getAvgCoinsInCluster()));
+	                }
+	    		}
+	    		else
+	    		{
+	    			if (heightmap[x][0] < height && heightmap[x][1] != heightmap[x][0] - 2 && x < xExit - 20 && x > 10)
+	    			{
+	    				ncoins--;
+	    				setBlock(x, heightmap[x][0] - 2, COIN);
 	    			}
 	    		}
 	    	}
