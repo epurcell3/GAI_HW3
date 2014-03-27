@@ -24,7 +24,7 @@ public class Enemies implements Biome {
         generationValues.setAvgCoinsInCluster(3);
         generationValues.setHillClusterSize(12);
         generationValues.setAvgHillsInCluster(2);
-        generationValues.setAvgeBlocksToRow(4);
+        generationValues.setAvgBlocksInRow(4);
         generationValues.setTotalSaturation(1.6);
         setEnemyClusters(generationValues);
     }

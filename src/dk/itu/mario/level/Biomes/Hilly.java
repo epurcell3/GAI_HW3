@@ -27,7 +27,7 @@ public class Hilly implements Biome {
         generationValues.setAvgCoinsInCluster(3);
         generationValues.setHillClusterSize(8);
         generationValues.setAvgHillsInCluster(6);
-        generationValues.setAvgeBlocksToRow(5);
+        generationValues.setAvgBlocksInRow(5);
         generationValues.setTotalSaturation(1.4);
         setEnemyClusters(generationValues);
     }

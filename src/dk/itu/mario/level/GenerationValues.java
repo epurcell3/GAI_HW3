@@ -27,7 +27,7 @@ public class GenerationValues {
     private int avgCoinsInCluster;
     private int hillClusterSize;
     private int avgHillsInCluster;
-    private double avgeBlocksToRow;
+    private int avgBlocksInRow;
     private double totalSaturation;
     ArrayList<ArrayList<Integer>> enemyClusterTypes;
 
@@ -48,7 +48,7 @@ public class GenerationValues {
             avgCoinsInCluster = 5;
             hillClusterSize = 7;
             avgHillsInCluster = 2;
-            avgeBlocksToRow = 4;
+            avgBlocksInRow = 4;
         }
         else{
             enemyCoeff = getEnemiesKilled(playerMetrics);
@@ -62,7 +62,7 @@ public class GenerationValues {
             avgCoinsInCluster = 5;
             hillClusterSize = 7;
             avgHillsInCluster = 2;
-            avgeBlocksToRow = 4;
+            avgBlocksInRow = 4;
 
             fixCoeffs(playerMetrics);
         }
@@ -157,8 +157,8 @@ public class GenerationValues {
         return avgHillsInCluster;
     }
 
-    public double getAvgeBlocksToRow() {
-        return avgeBlocksToRow;
+    public int getAvgBlocksInRow() {
+        return avgBlocksInRow;
     }
 
     public Biome getBiome() {
@@ -213,8 +213,8 @@ public class GenerationValues {
         this.avgHillsInCluster = avgHillsInCluster;
     }
 
-    public void setAvgeBlocksToRow(double avgeBlocksToRow) {
-        this.avgeBlocksToRow = avgeBlocksToRow;
+    public void setAvgBlocksInRow(int avgBlocksInRow) {
+        this.avgBlocksInRow = avgBlocksInRow;
     }
 
     public double getTotalSaturation() {
