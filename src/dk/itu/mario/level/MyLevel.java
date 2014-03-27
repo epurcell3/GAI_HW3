@@ -161,7 +161,9 @@ public class MyLevel extends Level{
 	    	        int jl = random.nextInt(2) + 2;
 	    	        if (heightmap[x-1][0] < heightmap[x+jl+1][0])
 	    	        	continue;
-	    	        heightmap[x][0] = height + 1;
+	    	        for (int k = 0; k < jl; k++) {
+	    	        	heightmap[x+k][0] = height + 1;
+	    	        }
 	        	}
 	        }
 	        
