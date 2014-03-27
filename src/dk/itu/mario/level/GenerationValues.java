@@ -91,9 +91,9 @@ public class GenerationValues {
         {
             holeCoeff = 0;
         }
-        enemyCoeff /= (playerMetrics.totalEnemies /2);
+        enemyCoeff /= (playerMetrics.totalEnemies);
         coinCoeff -= (playerMetrics.coinBlocksDestroyed / 2);
-        coinCoeff /= (playerMetrics.totalCoins * 3 / 2);
+        coinCoeff /= (playerMetrics.totalCoins / 2);
         bricksCoeff /= ((playerMetrics.totalEmptyBlocks + playerMetrics.totalCoinBlocks + playerMetrics.totalpowerBlocks) /2);
     }
     private void identifyBiomesAndAdjust(){
