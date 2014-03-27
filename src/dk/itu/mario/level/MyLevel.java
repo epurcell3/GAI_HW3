@@ -164,6 +164,8 @@ public class MyLevel extends Level{
 	    	        for (int k = 0; k < jl; k++) {
 	    	        	heightmap[x+k][0] = height + 1;
 	    	        }
+	    	        
+	    	        x += jl + 3;
 	        	}
 	        }
 	        
